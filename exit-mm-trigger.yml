@@ -10,7 +10,7 @@ spec:
   filter:
     attributes:
         type: com.vmware.event.router/event
-        subject: ExitedMaintenanceModeEvent
+        subject: ExitMaintenanceModeEvent
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1
