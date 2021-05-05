@@ -15,8 +15,8 @@ kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-
 1. Clone to local repository like:
 
 ```bash
-git clone https://github.com/darrylcauldwell/veba-knative-mm.git
-cd veba-knative-mm
+git clone https://github.com/darrylcauldwell/veba-knative-mm-exit.git
+cd veba-knative-mm-exit
 ```
 
 2. Update handler.ps1 with required business logic
