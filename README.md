@@ -14,7 +14,7 @@ kubectl -n vmware-functions create secret generic veba-knative-mm-vrops \
 # Install Function
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-exit/main/veba-knative-mm-exit.yml
+kubectl apply -f https://raw.githubusercontent.com/darrylcauldwell/veba-knative-mm-exit/master/veba-knative-mm-exit.yml
 ```
 
 # Update Function
