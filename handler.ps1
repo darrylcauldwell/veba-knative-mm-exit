@@ -14,9 +14,10 @@ Write-Host "Full contents of CloudEventData`n $(${cloudEventData} | ConvertTo-Js
 
 ## vROps REST API documentation https://code.vmware.com/apis/364/vrealize-operations
 
-## Hardcoded variables to move to secrets later
-$vropsFqdn = "vrops.cork.local"
-$vropsPassword = "VMware1!"
+## Check secret in place which supplies vROps environment variables
+Write-Host "vropsFqdn:" ${env:vropsFqdn}
+Write-Host "vropsUser:" ${env:vropsUser}
+Write-Host "vropsPassword:" ${env:vropsPassword}
 
 ## Form unauthorized headers payload
 $headers = @{
@@ -25,10 +26,10 @@ $headers = @{
    }
 
 ## Acquire bearer token
-$uri = "https://" + $vropsFqdn + "/suite-api/api/auth/token/acquire"
+$uri = "https://" + ${env:vropsFqdn} + "/suite-api/api/auth/token/acquire"
 $basicAuthBody = @{
-    username =  "admin";
-    password = $vropsPassword ;
+    username = ${env:vropsUser};
+    password = ${env:vropsPassword} ;
     }
 $basicAuthBodyJson = $basicAuthBody | ConvertTo-Json -Depth 5
 Write-Host "Acquiring bearer token ..."
@@ -43,21 +44,22 @@ $authedHeaders = @{
    }
 
 ## Get host ResourceID
-$uri = "https://" + $vropsFqdn + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
+$uri = "https://" + ${env:vropsFqdn} + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
 Write-Host "Acquiring host ResourceID ..."
 $resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
 $resourceJson = $resource.Content | ConvertFrom-Json
 Write-Host "ResourceID of host is " $resourceJson.resourceList[0].identifier
 
 ## Unmark host as maintenance mode
-$uri = "https://" + $vropsFqdn + "/suite-api/api/resources/" + $resourceJson.resourceList[0].identifier + "/maintained"
+$uri = "https://" + ${env:vropsFqdn} + "/suite-api/api/resources/" + $resourceJson.resourceList[0].identifier + "/maintained"
 Write-Host "Unmarking host as vROps maintenance mode ..."
 Invoke-WebRequest -Uri $uri -Method DELETE -Headers $authedHeaders -SkipCertificateCheck
 
 ## Get host maintenance mode state
-$uri = "https://" + $vropsFqdn + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
+$uri = "https://" + ${env:vropsFqdn} + "/suite-api/api/adapterkinds/VMWARE/resourcekinds/HostSystem/resources?name=" + $esxiHost
 Write-Host "Acquiring host maintenance mode state ..."
 $resource = Invoke-WebRequest -Uri $uri -Method GET -Headers $authedHeaders -SkipCertificateCheck
 $resourceJson = $resource.Content | ConvertFrom-Json
 Write-Host "Host maintenence mode state is " $resourceJson.resourceList[0].resourceStatusStates[0].resourceState
+Write-Host "Note: STARTED=Not In Maintenance | MAINTAINED_MANUAL=In Maintenance"
 }
