@@ -1,8 +1,8 @@
-## Background
+## Background
 
 https://darrylcauldwell.github.io/post/veba-knative/
 
-## Setup Environment Variables
+## Setup Environment Variables
 
 ```bash
 kubectl -n vmware-functions create secret generic veba-knative-mm-vrops \
